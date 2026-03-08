@@ -1,4 +1,4 @@
-package io.dimasla4ee.contacts_viewer
+package io.dimasla4ee.contacts_viewer.domain.model
 
 import androidx.annotation.DrawableRes
 

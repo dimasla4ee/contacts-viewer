@@ -1,13 +1,12 @@
-package io.dimasla4ee.contacts_viewer
+package io.dimasla4ee.contacts_viewer.presentation.contact_details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
@@ -19,33 +18,52 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import io.dimasla4ee.contacts_viewer.R
+import io.dimasla4ee.contacts_viewer.domain.model.Contact
+import io.dimasla4ee.contacts_viewer.presentation.components.RoundInitials
 
 @Composable
 fun ContactDetails(
-    modifier: Modifier = Modifier,
-    contact: Contact
+    contact: Contact,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image( //TODO: Initials
-            modifier = Modifier
-                .fillMaxWidth(0.55f)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop,
-            painter = painterResource(contact.imageRes ?: R.drawable.ic_launcher_background),
+        val avatarSizeModifier = Modifier.fillMaxWidth(0.55f)
+
+        contact.imageRes?.let {
+            Image(
+                modifier = avatarSizeModifier
+                    .aspectRatio(1f)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
+                painter = painterResource(contact.imageRes),
+                contentDescription = null
+            )
+        } ?: RoundInitials(
+            modifier = avatarSizeModifier,
+            initials = "${contact.name.first()}${contact.familyName.first()}",
+            textStyle = TextStyle.Default.copy(
+                fontSize = 50.sp
+            ),
+            color = Color.LightGray,
             contentDescription = null
         )
-        Spacer(Modifier.height(16.dp))
+
         Text(
+            modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
             text = "${contact.name} ${contact.surname}",
             style = MaterialTheme.typography.titleSmall
         )
@@ -62,7 +80,6 @@ fun ContactDetails(
                     contentDescription = stringResource(R.string.is_in_favorites)
                 )
             }
-
         }
 
         Card(
@@ -76,13 +93,12 @@ fun ContactDetails(
                 label = stringResource(R.string.address),
                 value = contact.address
             )
-            contact.email?.let {
+            if (contact.email != null) {
                 LabelValueRow(
                     label = stringResource(R.string.email),
                     value = contact.email
                 )
             }
-
         }
     }
 }
