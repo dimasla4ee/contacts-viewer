@@ -3,4 +3,5 @@
     <string name="app_name">ContactsViewer</string>
     <string name="mobile">Телефон</string>
     <string name="address">Адрес</string>
+    <string name="is_in_favorites">Добавлено в избранное</string>
 </resources>
